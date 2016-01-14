@@ -3,6 +3,7 @@ __author__ = 'ZeRoGerc'
 from parser import *
 from constructor import Constructor
 
+
 def define_variables(exp, variables):
     """
     :return: map variables changed to proper define of variables:
@@ -11,11 +12,11 @@ def define_variables(exp, variables):
     if isinstance(exp, Variable):
         if not(exp.name in variables):
             variables[exp.name] = len(variables)
-    elif isinstance(exp, Nor):
-        define_variables(exp.expression, variables)
+    elif isinstance(exp, Unary):
+        define_variables(exp.expression(), variables)
     else:
-        define_variables(exp.left, variables)
-        define_variables(exp.right, variables)
+        define_variables(exp.left(), variables)
+        define_variables(exp.right(), variables)
 
 
 def next_mask(mask):
@@ -35,16 +36,16 @@ def check(mask, exp, variables):
     if isinstance(exp, Variable):
         return mask[variables[exp.name]]
     elif isinstance(exp, Nor):
-        return not check(mask, exp.expression, variables)
+        return not check(mask, exp.expression(), variables)
     elif isinstance(exp, And):
-        return check(mask, exp.left, variables) and check(mask, exp.right, variables)
+        return check(mask, exp.left(), variables) and check(mask, exp.right(), variables)
     elif isinstance(exp, Or):
-        return check(mask, exp.left, variables) or check(mask, exp.right, variables)
+        return check(mask, exp.left(), variables) or check(mask, exp.right(), variables)
     else:
-        if not check(mask, exp.left, variables):
+        if not check(mask, exp.left(), variables):
             return 1
         else:
-            return check(mask, exp.right, variables)
+            return check(mask, exp.right(), variables)
 
 
 def formatted(mask, variables):

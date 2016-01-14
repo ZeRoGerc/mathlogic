@@ -1,15 +1,17 @@
 __author__ = 'ZeRoGerc'
 
 import re
+from expressions import *
 
 is_variable = re.compile("[A-Z][A-Z0-9]*")
+# is_variable = re.compile("[a-z][0-9]*]")
 
-def __has_same_shape__(shape_exp, full_exp, def_variables=None):
-    """
-    :type dict: dictionary
-    """
+
+def __has_same_shape__(shape_exp: Expression, full_exp: Expression, def_variables=None):
     if def_variables is None:
         def_variables = {}
+
+    assert not isinstance(shape_exp, Quantifier)
 
     if isinstance(shape_exp, Variable):
         if shape_exp.name in def_variables.keys():
@@ -20,18 +22,19 @@ def __has_same_shape__(shape_exp, full_exp, def_variables=None):
         else:
             def_variables[shape_exp.name] = full_exp
             return True, def_variables
-    elif shape_exp.name != full_exp.name:
-        return False, def_variables
-    elif shape_exp.name == '!':
-        return __has_same_shape__(shape_exp.expression, full_exp.expression, def_variables)
-    else:
-        is_ok, def_variables = __has_same_shape__(shape_exp.left, full_exp.left, def_variables)
-        if not is_ok:
+    elif isinstance(shape_exp, MultiOperation) and isinstance(full_exp, MultiOperation):
+        if (shape_exp.get_name() != full_exp.get_name()) or (len(shape_exp.args) != len(full_exp.args)):
             return False, def_variables
-        is_ok, def_variables = __has_same_shape__(shape_exp.right, full_exp.right, def_variables)
-        if not is_ok:
-            return False, def_variables
+
+        for i in range(0, len(shape_exp.args)):
+            is_ok, def_variables = __has_same_shape__(shape_exp.args[i], full_exp.args[i], def_variables)
+
+            if not is_ok:
+                return False, def_variables
+
         return True, def_variables
+    else:
+        return False, def_variables
 
 
 def has_same_shape(shape_exp, full_exp):
@@ -39,80 +42,77 @@ def has_same_shape(shape_exp, full_exp):
     return is_ok
 
 
-class Variable:
-    def __init__(self, name):
-        self.name = name
-
-    def __eq__(self, other):
-        if not isinstance(other, Variable):
-            return False
-        else:
-            return self.name == other.name
-
-    def __str__(self):
-        return str(self.name)
-
-    def __hash__(self):
-        return hash(self.name)
-
-
-class Nor:
-    def __init__(self, expression):
-        self.expression = expression
-        self.name = '!'
-
-    def __eq__(self, other):
-        if not isinstance(other, Nor):
-            return False
-        else:
-            return self.expression == other.expression
-
-    def __str__(self):
-        return '!(' + str(self.expression) + ')'
-
-    def __hash__(self):
-        return hash((self.name, self.expression))
-
-
-class Operation:
-    def __init__(self, left, right, name):
-        self.left = left
-        self.right = right
-        self.name = name
-
-    def __eq__(self, other):
-        if not isinstance(other, Operation):
-            return False
-        else:
-            return self.left == other.left and self.right == other.right and self.name == other.name
-
-    def __str__(self):
-        return '(' + str(self.left) + ')' + str(self.name) + '(' + str(self.right) + ')'
-
-    def __hash__(self):
-        return hash((self.name, self.left, self.right))
-
-class And(Operation):
-    def __init__(self, left, right):
-        super(And, self).__init__(left, right, '&')
-
-
-class Or(Operation):
-    def __init__(self, left, right):
-        super(Or, self).__init__(left, right, '|')
-
-
-class Implication(Operation):
-    def __init__(self, left, right):
-        super(Implication, self).__init__(left, right, '->')
-
+# class Variable:
+#     def __init__(self, name):
+#         self.name = name
+#
+#     def __eq__(self, other):
+#         if not isinstance(other, Variable):
+#             return False
+#         else:
+#             return self.name == other.name
+#
+#     def __str__(self):
+#         return str(self.name)
+#
+#     def __hash__(self):
+#         return hash(self.name)
+#
+#
+# class Nor:
+#     def __init__(self, expression):
+#         self.expression = expression
+#         self.name = '!'
+#
+#     def __eq__(self, other):
+#         if not isinstance(other, Nor):
+#             return False
+#         else:
+#             return self.expression == other.expression
+#
+#     def __str__(self):
+#         return '!(' + str(self.expression) + ')'
+#
+#     def __hash__(self):
+#         return hash((self.name, self.expression))
+#
+#
+# class Operation:
+#     def __init__(self, left, right, name):
+#         self.left = left
+#         self.right = right
+#         self.name = name
+#
+#     def __eq__(self, other):
+#         if not isinstance(other, Operation):
+#             return False
+#         else:
+#             return self.left == other.left and self.right == other.right and self.name == other.name
+#
+#     def __str__(self):
+#         return '(' + str(self.left) + ')' + str(self.name) + '(' + str(self.right) + ')'
+#
+#     def __hash__(self):
+#         return hash((self.name, self.left, self.right))
+#
+# class And(Operation):
+#     def __init__(self, left, right):
+#         super(And, self).__init__(left, right, '&')
+#
+#
+# class Or(Operation):
+#     def __init__(self, left, right):
+#         super(Or, self).__init__(left, right, '|')
+#
+#
+# class Implication(Operation):
+#     def __init__(self, left, right):
+#         super(Implication, self).__init__(left, right, '->')
+#
 
 class Parser:
-    """
-    :type self.main_string: str
-    """
     def __init__(self):
-        self.main_string = ""
+        self.main_string = ''
         self.index = 0
 
     def parse_negation(self):

@@ -3,23 +3,8 @@ __author__ = 'ZeRoGerc'
 from parser import *
 import time
 
-def get_formatted(line):
-    """
-    :type: line: tuple
-    """
-    result = ""
-    result += '(' + str(line[0]) + ') '
-    result += str(line[1]) + ' ('
-    result += str(line[2])
-    if len(line) > 3:
-        result += ' ' + str(line[3])
-    if len(line) > 4:
-        result += ', ' + str(line[4])
-    result += ')\n'
-    return result
 
-
-class Checker:
+class PropositionalChecker:
     def __init__(self):
         self.parser = Parser()
         self.axioms = (
@@ -34,6 +19,20 @@ class Checker:
             (self.parser.parse('(A->B)->(A->!B)->!A'), 9),
             (self.parser.parse('!!A->A'), 10),
         )
+
+    @staticmethod
+    def get_formatted(line: tuple):
+        result = ""
+        result += '(' + str(line[0]) + ') '
+        result += str(line[1]) + ' ('
+        result += str(line[2])
+        if len(line) > 3:
+            result += ' ' + str(line[3])
+        if len(line) > 4:
+            result += ', ' + str(line[4])
+        result += ')\n'
+        return result
+
     def check(self, string, proof):
         """
         string it's a title
@@ -67,29 +66,29 @@ class Checker:
             for axiom, idx in self.axioms:
                 if has_same_shape(axiom, expression):
                     accept_expression = True
-                    output_file.write(get_formatted((number, str_exp, 'Сх. акс.', idx)))
+                    output_file.write(PropositionalChecker.get_formatted((number, str_exp, 'Сх. акс.', idx)))
 
             if not accept_expression:
                 # Check if it's proposal
                 for prop, idx in proposals:
                     if expression == prop:
                         accept_expression = True
-                        output_file.write(get_formatted((number, str_exp, 'Предп.', idx)))
+                        output_file.write(PropositionalChecker.get_formatted((number, str_exp, 'Предп.', idx)))
                         break
 
             if not accept_expression:
                 # Check if it's the result of Modus Ponens
                 for prf, idx1 in reversed(proofed):
-                    if isinstance(prf, Implication) and prf.right == expression and prf.left in proofed_dict:
+                    if isinstance(prf, Implication) and prf.right() == expression and prf.left() in proofed_dict:
                             accept_expression = True
-                            output_file.write(get_formatted((number, str_exp, 'M.P.', proofed_dict[prf.left], idx1)))
+                            output_file.write(PropositionalChecker.get_formatted((number, str_exp, 'M.P.', proofed_dict[prf.left()], idx1)))
                             break
 
             if accept_expression:
                 proofed_dict[expression] = number
                 proofed.append((expression, number))
             else:
-                output_file.write(get_formatted((number, str_exp, 'Не доказано')))
+                output_file.write(PropositionalChecker.get_formatted((number, str_exp, 'Не доказано')))
 
             number += 1
 
@@ -111,7 +110,7 @@ def solve():
             else:
                 proof.append(line)
 
-    checker = Checker()
+    checker = PropositionalChecker()
     checker.check(title, proof)
 
     t2 = time.time()

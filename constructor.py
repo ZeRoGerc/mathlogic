@@ -160,16 +160,16 @@ class Constructor:
                 proof.append(Nor(expression))
                 return expression, False, proof
         elif isinstance(expression, Nor):
-            get_res = self.get_proof_in_proposal(expression.expression, mask, variables)
+            get_res = self.get_proof_in_proposal(expression.expression(), mask, variables)
             proof = proof + get_res[2]
             if get_res[1]:
-                proof = proof + get_a_not_not_a_proof(expression.expression)
+                proof = proof + get_a_not_not_a_proof(expression.expression())
                 return expression, False, proof
             else:
                 return expression, True, proof
-        elif isinstance(expression, Operation):
-            left = self.get_proof_in_proposal(expression.left, mask, variables)
-            right = self.get_proof_in_proposal(expression.right, mask, variables)
+        elif isinstance(expression, Binary):
+            left = self.get_proof_in_proposal(expression.left(), mask, variables)
+            right = self.get_proof_in_proposal(expression.right(), mask, variables)
             proof = left[2] + right[2]
             key = 'and'
             if isinstance(expression, And):
@@ -189,7 +189,6 @@ class Constructor:
                 return expression, True, proof
             else:
                 return expression, False, proof
-
 
     def get_proof(self, expression, variables):
         mask = tuple([0] * len(variables))

@@ -74,9 +74,9 @@ class Converter:
                 mp_exp1, mp_exp2 = (0, 1)
                 already_find = False
                 for exp1 in reversed(proofed):
-                    if isinstance(exp1, Implication) and exp1.right == expression:
+                    if isinstance(exp1, Implication) and exp1.right() == expression:
                         for exp2 in reversed(proofed):
-                            if exp2 == exp1.left:
+                            if exp2 == exp1.left():
                                 already_find = True
                                 mp_exp1 = exp2
                                 mp_exp2 = exp1

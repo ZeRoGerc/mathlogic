@@ -11,12 +11,12 @@ def define_var(expression, def_a, def_b):
         else:
             return def_b
 
-    if isinstance(expression, Nor):
-        return Nor(define_var(expression.expression, def_a, def_b))
+    if isinstance(expression, Unary):
+        return Nor(define_var(expression.expression(), def_a, def_b))
 
-    if isinstance(expression, Operation):
-        left = define_var(expression.left, def_a, def_b)
-        right = define_var(expression.right, def_a, def_b)
+    if isinstance(expression, Binary):
+        left = define_var(expression.left(), def_a, def_b)
+        right = define_var(expression.right(), def_a, def_b)
 
         if isinstance(expression, And):
             return And(left, right)
