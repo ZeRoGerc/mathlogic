@@ -61,6 +61,6 @@ p = formal_parser.Parser()
 
 # input_file = open('proofs/exist_quantifier_rule.proof', 'r')
 # input_file = open('logic2014/tests/HW4/correct11.in', 'r')
-input_file = open('input', 'r')
-output_file = open('output', 'w')
+input_file = open('output', 'r')
+output_file = open('input', 'w')
 solve()

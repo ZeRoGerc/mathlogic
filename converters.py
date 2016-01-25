@@ -61,11 +61,11 @@ class FormalConverter:
             return object(x, new_exp)
         elif isinstance(exp, Predicate) and len(exp.args) == 0:
             if exp.name == 'A':
-                return a
+                return copy.deepcopy(a)
             elif exp.name == 'B':
-                return b
+                return copy.deepcopy(b)
             elif exp.name == 'C':
-                return c
+                return copy.deepcopy(c)
             else:
                 print("exp_subst fails")
         elif isinstance(exp, MultiOperation):

@@ -80,10 +80,10 @@ class Inc(Unary):
         super(Inc, self).__init__(expression, "'")
 
     def __str__(self):
-        # if isinstance(self.expression, Inc):
-        #     return str(self.expression) + "'"
-        # else:
-        return '(' + str(self.expression()) + ")'"
+        if isinstance(self.expression(), Inc):
+            return str(self.expression()) + "'"
+        else:
+            return '(' + str(self.expression()) + ")'"
 
 
 class Nor(Unary):
