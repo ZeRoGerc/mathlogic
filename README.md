@@ -1,2 +1,2 @@
 # mathlogic
-My homework for mythologic course
+Все дз кроме третьей работают под pypy3(третья работает только под python3)
