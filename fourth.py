@@ -39,7 +39,7 @@ def solve():
             while i > 0 and title[i] != ',':
                 i -= 1
             if i == 0:
-                title = '|-' + title[:d] + '->' + title[(d + 2):]
+                title = '|-(' + title[:d] + ')->' + title[(d + 2):]
             else:
                 title = title[:i] + '|-' + title[i + 1:d] + '->' + title[(d + 2):]
 
@@ -60,7 +60,7 @@ p = formal_parser.Parser()
 
 
 # input_file = open('proofs/exist_quantifier_rule.proof', 'r')
-# input_file = open('logic2014/tests/HW4/correct11.in', 'r')
-input_file = open('output', 'r')
-output_file = open('input', 'w')
+input_file = open('logic2014/tests/HW4/incorrect11.in', 'r')
+# input_file = open('input', 'r')
+output_file = open('output', 'w')
 solve()

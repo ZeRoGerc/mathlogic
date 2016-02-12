@@ -10,18 +10,18 @@ class Variable(Expression):
     def __init__(self, name: str):
         super(Variable, self).__init__()
         self.name = name
+        self.hash = hash(self.name)
 
     def __eq__(self, other: Expression):
-        if not isinstance(other, Variable):
+        if self.__hash__() != other.__hash__():
             return False
-        else:
-            return self.name == other.name
+        return self.name == other.name
 
     def __str__(self):
         return str(self.name)
 
     def __hash__(self):
-        return hash(self.name)
+        return self.hash
 
     def get_name(self):
         return 'var'
@@ -32,12 +32,13 @@ class MultiOperation(Expression):
         super(MultiOperation, self).__init__()
         self.args = args
         self.name = name
+        self.hash = hash((self.name, self.args))
 
     def __eq__(self, other: Expression):
-        if not isinstance(other, MultiOperation):
+        if self.__hash__() != other.__hash__():
             return False
-        else:
-            return self.name == other.name and self.args == other.args
+
+        return self.name == other.name and self.args == other.args
 
     def __str__(self):
         if len(self.args) == 0:
@@ -46,7 +47,7 @@ class MultiOperation(Expression):
             return str(self.name) + '(' + ','.join(map(str, self.args)) + ')'
 
     def __hash__(self):
-        return hash((self.name, self.args))
+        return self.hash
 
     def get_name(self):
         return str(self.name)
@@ -142,21 +143,23 @@ class Function(MultiOperation):
 
 class Quantifier(Expression):
     def __init__(self, name: str, var: Variable, exp: Expression):
+        super(Quantifier, self).__init__()
         self.name = name
         self.variable = var
         self.expression = exp
+        self.hash = hash((self.name, self.variable, self.expression))
 
     def __eq__(self, other: Expression):
-        if not isinstance(other, Quantifier):
+        if self.__hash__() != other.__hash__():
             return False
-        else:
-            return self.name == other.name and self.variable == other.variable and self.expression == other.expression
+
+        return self.name == other.name and self.variable == other.variable and self.expression == other.expression
 
     def __str__(self):
         return str(self.name) + str(self.variable) + '(' + str(self.expression) + ')'
 
     def __hash__(self):
-        return hash((self.name, self.variable, self.expression))
+        return self.hash
 
     def get_name(self):
         return str(self.name)

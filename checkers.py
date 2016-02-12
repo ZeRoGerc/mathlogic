@@ -11,7 +11,6 @@ class Error:
     quantifier_rule = 3
     unspecified = 4
 
-
 class FormalChecker:
     def __init__(self):
         self.proof = []  # expressions that we already proofed
@@ -84,24 +83,24 @@ class FormalChecker:
 
         message = None
         if isinstance(left, UniQuantifier):  # check @x(v)->(v[x:=T])
-            if left.variable.name in self.banned_vars:
-                message = self.__get_formatted_error__(Error.quantifier_rule, ("схема аксиом", left.variable.name))
-            else:
-                is_ok, replace = formal_parser.is_substitution(left.expression, right, left.variable)
-                if is_ok:
-                    return "ok"
-                elif replace is not None:
-                    message = self.__get_formatted_error__(Error.not_free, (replace, left.expression, left.variable))
+            # if left.variable.name in self.banned_vars:
+            #     message = self.__get_formatted_error__(Error.quantifier_rule, ("схема аксиом", left.variable.name))
+            # else:
+            is_ok, replace = formal_parser.is_substitution(left.expression, right, left.variable)
+            if is_ok:
+                return "ok"
+            elif replace is not None:
+                message = self.__get_formatted_error__(Error.not_free, (replace, left.expression, left.variable))
 
         if isinstance(right, ExistQuantifier):  # check (v[x:=T])->?x(v)
-            if right.variable.name in self.banned_vars:
-                message = self.__get_formatted_error__(Error.quantifier_rule, ("схема аксиом", right.variable.name))
-            else:
-                is_ok, replace = formal_parser.is_substitution(right.expression, left, right.variable)
-                if is_ok:
-                    return "ok"
-                elif replace is not None:
-                    message = self.__get_formatted_error__(Error.not_free, (replace, right.expression, right.variable))
+            # if right.variable.name in self.banned_vars:
+            #     message = self.__get_formatted_error__(Error.quantifier_rule, ("схема аксиом", right.variable.name))
+            # else:
+            is_ok, replace = formal_parser.is_substitution(right.expression, left, right.variable)
+            if is_ok:
+                return "ok"
+            elif replace is not None:
+                message = self.__get_formatted_error__(Error.not_free, (replace, right.expression, right.variable))
 
         if isinstance(left, And):  # check f[x:=0]&@x(f->f[x:=x'])->f
             if isinstance(left.right(), Quantifier):
@@ -129,10 +128,10 @@ class FormalChecker:
                 # f[x:=x']
                 is_ok, replace = formal_parser.is_substitution(right, impl.right(), variable)
                 if is_ok and (replace == Inc(variable)):
-                    if variable in self.banned_vars:
-                        message = self.__get_formatted_error__(Error.quantifier_rule, ("схема аксиом", variable))
-                    else:
-                        return "ok"
+                    # if variable in self.banned_vars:
+                    #     message = self.__get_formatted_error__(Error.quantifier_rule, ("схема аксиом", variable))
+                    # else:
+                    return "ok"
 
         return message
 

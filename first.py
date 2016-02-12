@@ -119,7 +119,7 @@ def solve():
 
 
 
-# input_file = open('logic2014/tests/HW1/good6.in', 'r')
-input_file = open('output', 'r')
-output_file = open('input', 'w')
+input_file = open('logic2014/tests/HW1/good5.in', 'r')
+# input_file = open('output', 'r')
+output_file = open('output', 'w')
 solve()
