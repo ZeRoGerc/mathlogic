@@ -121,33 +121,33 @@ class Constructor:
         self.atomic_proofs['and'][True] = {}
         os.chdir(parent_dir + '/proofs/and')
 
-        self.atomic_proofs['and'][False][False] = (False, construct_atomic_proof('!a,!b|-!(a&b).proof'))
-        self.atomic_proofs['and'][False][True] = (False, construct_atomic_proof('!a,b|-!(a&b).proof'))
-        self.atomic_proofs['and'][True][False] = (False, construct_atomic_proof('a,!b|-!(a&b).proof'))
-        self.atomic_proofs['and'][True][True] = (True, construct_atomic_proof('a,b|-a&b.proof'))
+        self.atomic_proofs['and'][False][False] = (False, construct_atomic_proof('nanb.proof'))
+        self.atomic_proofs['and'][False][True] = (False, construct_atomic_proof('nab.proof'))
+        self.atomic_proofs['and'][True][False] = (False, construct_atomic_proof('anb.proof'))
+        self.atomic_proofs['and'][True][True] = (True, construct_atomic_proof('ab.proof'))
 
         self.atomic_proofs['cons'] = {}
         self.atomic_proofs['cons'][False] = {}
         self.atomic_proofs['cons'][True] = {}
         os.chdir(parent_dir + '/proofs/cons')
 
-        self.atomic_proofs['cons'][False][False] = (True, construct_atomic_proof('!a,!b|-a->b.proof'))
-        self.atomic_proofs['cons'][False][True] = (True, construct_atomic_proof('!a,b|-a->b.proof'))
-        self.atomic_proofs['cons'][True][False] = (False, construct_atomic_proof('a,!b|-!(a->b).proof'))
-        self.atomic_proofs['cons'][True][True] = (True, construct_atomic_proof('a,b|-a->b.proof'))
+        self.atomic_proofs['cons'][False][False] = (True, construct_atomic_proof('nanb.proof'))
+        self.atomic_proofs['cons'][False][True] = (True, construct_atomic_proof('nab.proof'))
+        self.atomic_proofs['cons'][True][False] = (False, construct_atomic_proof('anb.proof'))
+        self.atomic_proofs['cons'][True][True] = (True, construct_atomic_proof('ab.proof'))
 
         self.atomic_proofs['or'] = {}
         self.atomic_proofs['or'][False] = {}
         self.atomic_proofs['or'][True] = {}
         os.chdir(parent_dir + '/proofs/or')
 
-        self.atomic_proofs['or'][False][False] = (False, construct_atomic_proof('!a,!b|-!(a|b).proof'))
-        self.atomic_proofs['or'][False][True] = (True, construct_atomic_proof('!a,b|-a|b.proof'))
-        self.atomic_proofs['or'][True][False] = (True, construct_atomic_proof('a,!b|-a|b.proof'))
-        self.atomic_proofs['or'][True][True] = (True, construct_atomic_proof('a,b|-a|b.proof'))
+        self.atomic_proofs['or'][False][False] = (False, construct_atomic_proof('nanb.proof'))
+        self.atomic_proofs['or'][False][True] = (True, construct_atomic_proof('!ab.proof'))
+        self.atomic_proofs['or'][True][False] = (True, construct_atomic_proof('anb.proof'))
+        self.atomic_proofs['or'][True][True] = (True, construct_atomic_proof('ab.proof'))
 
         os.chdir(parent_dir + '/proofs')
-        self.a_or_nor_a = construct_atomic_proof('|-a|!a.proof')
+        self.a_or_nor_a = construct_atomic_proof('ana.proof')
         os.chdir(parent_dir)
 
     def get_proof_in_proposal(self, expression, mask, variables):
