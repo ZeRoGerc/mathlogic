@@ -142,7 +142,7 @@ class Constructor:
         os.chdir(parent_dir + '/proofs/or')
 
         self.atomic_proofs['or'][False][False] = (False, construct_atomic_proof('nanb.proof'))
-        self.atomic_proofs['or'][False][True] = (True, construct_atomic_proof('!ab.proof'))
+        self.atomic_proofs['or'][False][True] = (True, construct_atomic_proof('nab.proof'))
         self.atomic_proofs['or'][True][False] = (True, construct_atomic_proof('anb.proof'))
         self.atomic_proofs['or'][True][True] = (True, construct_atomic_proof('ab.proof'))
 

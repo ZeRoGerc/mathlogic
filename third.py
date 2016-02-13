@@ -89,6 +89,7 @@ def solve():
         constructor = Constructor()
         proof = constructor.get_proof(expression, variables)
 
+        output_file.write('|-' + str_expression + '\n')
         for exp in proof:
             output_file.write(str(exp) + '\n')
 
